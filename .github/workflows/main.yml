@@ -1,0 +1,21 @@
+name: CI-CD prod
+on:
+  push:
+    branches:
+      - prod
+jobs:
+  ssh-to-ec2:
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: | 
+            cd /var/www/admin
+            git pull origin prod
+            yarn
+            yarn build
