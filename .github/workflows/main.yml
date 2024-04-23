@@ -1,8 +1,12 @@
-name: CI-CD prod
+name: CI-CD main
 on:
   push:
     branches:
-      - prod
+      - main
+env:
+  SSH_HOST: 164.92.91.181
+  SSH_USER: root
+
 jobs:
   ssh-to-ec2:
     runs-on: ubuntu-latest
@@ -10,12 +14,12 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USER }}
         password: ${{ secrets.SSH_KEY }}
         port: 22
-        script: | 
-            cd /var/www/admin
-            git pull origin prod
+        script: |
+            cd /var/www/gogo_admin
+            git pull origin main
             yarn
             yarn build
